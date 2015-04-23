@@ -6,7 +6,7 @@
 
 define(function (require) {
     var _ = require('underscore');
-    var fc = require('fc-core');
+    var util = require('fc-core/util');
     var EventTarget = require('fc-core/EventTarget');
     var oo = require('fc-core/oo');
     var Promise = require('fc-core/Promise');
@@ -46,7 +46,7 @@ define(function (require) {
         },
         bindEvents: _.noop,
         processError: function (e) {
-            fc.util.processError(e);
+            util.processError(e);
         },
         dispose: _.noop
     };
