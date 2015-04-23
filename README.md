@@ -14,8 +14,16 @@ like shadowDOM, I've decided using AMD Loader to import component.
 like this:
 ```javascript
 require('kComponent/component!somepath/something');
+// with this we don't need to do anything else
 ```
-./somepath/something.component.html will be loaded as a html. You can register a component inside it.
+./somepath/something.component.html will be loaded as a html. You can register a component inside it.  
+
+or like this
+```
+require('component/somePath/AComponent');
+// you should have the code below in component/somePath/AComponent.js
+require('kCOmponent/component!./aComponent');
+```
 
 Just call it `component.html`
 

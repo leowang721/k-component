@@ -13,6 +13,6 @@
     },
     "main": "main",
     "description": "A simple component shim, using custom element",
-    "homepage": "https://github.com/leowang721/component-shim",
-    "repository": "git://github.com/leowang721/component-shim"
+    "homepage": "https://github.com/leowang721/kComponent",
+    "repository": "git://github.com/leowang721/kComponent"
 }
