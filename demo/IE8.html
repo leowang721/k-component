@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="author" content="Leo Wang" />
+    <title>使用custom-element-shim</title>
+
+    <!--[if lte IE 9]><script>(function(f){window.setTimeout=f(window.setTimeout);window.setInterval=f(window.setInterval)})(function(f){return function(c,t){var a=[].slice.call(arguments,2);return f(function(){c.apply(this,a)},t)}});</script><![endif]-->
+    <!--[if IE 8]><script src="dep/custom-element-shim/dep/ie8.js"></script><![endif]-->
+    <!-- <script src="dep/custom-element-shim/dep/dom4.js"></script> -->
+    <!--[if IE 8]><script src="dep/custom-element-shim/dep/dre-ie8-upfront-fix.js"></script><![endif]-->
+
+    <!--[if IE 8]>
+    <script src="dep/custom-element-shim/dep/es5-shim/es5-shim.js"></script>
+    <script src="dep/custom-element-shim/dep/es5-shim/es5-sham.js"></script>
+    <![endif]-->
+
+    <script src="http://s1.bdstatic.com/r/www/cache/ecom/esl/2-0-6/esl.js"></script>
+    <script>
+    require.config({
+        'baseUrl': 'src',
+        'paths': {},
+        'packages': [
+            {
+                'name': 'component-shim',
+                'location': '../dep/component-shim/src',
+                'main': 'main'
+            },
+            {
+                'name': 'custom-element-shim',
+                'location': '../dep/custom-element-shim/src',
+                'main': 'document-register-element'
+            },
+            {
+                'name': 'jquery',
+                'location': '../dep/jquery/1.9.1/src',
+                'main': 'jquery.min'
+            },
+            {
+                'name': 'eoo',
+                'location': '../dep/eoo/0.1.1/src',
+                'main': 'main'
+            },
+            {
+                'name': 'etpl',
+                'location': '../dep/etpl/3.0.0/src',
+                'main': 'main'
+            },
+            {
+                'name': 'fc-core',
+                'location': '../dep/fc-core/0.0.1-alpha.7/src',
+                'main': 'main'
+            },
+            {
+                'name': 'mini-event',
+                'location': '../dep/mini-event/1.0.2/src',
+                'main': 'main'
+            },
+            {
+                'name': 'promise',
+                'location': '../dep/promise/1.0.2/src',
+                'main': 'main'
+            },
+            {
+                'name': 'underscore',
+                'location': '../dep/underscore/1.6.0/src',
+                'main': 'underscore'
+            }
+        ]
+    });
+    </script>
+</head>
+
+<body>
+    <h1>使用webcomponents.js</h1>
+    <div id="main"></div>
+
+    <template id="x-foo-template">
+        <style>
+            #container {
+                display: inline-block;
+                font-size: 13px;
+                background-color: #efefef;
+                border: 1px solid #ccc;
+                padding: 2px 4px;
+            }
+        </style>
+        <!-- 带下拉菜单的button，例子哦 -->
+        <div id="container">
+            <button id="realBtn"><content></content></button>
+            <select id="selection">
+                <option value="?">请选择</option>
+                <option value="a">aaaa</option>
+                <option value="b">bbbb</option>
+            </select>
+        </div>
+    </template>
+    <script>
+        require(['main']);
+    </script>
+
+</body>
+</html>
