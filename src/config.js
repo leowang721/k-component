@@ -1,5 +1,5 @@
 /**
- * @file GLOBAL config for kComponent
+ * @file GLOBAL config for k-component
  *
  * @author Leo Wang(leowang721@gmail.com)
  */
@@ -7,7 +7,7 @@
 define(function (require) {
 
     /**
-     * GLOBAL config for kComponent
+     * GLOBAL config for k-component
      * @class component.config
      * @type {Object}
      */

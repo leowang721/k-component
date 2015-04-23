@@ -1,4 +1,4 @@
-# kComponent
+# k-component
 a simple component shim, using custom element
 
 ## about custom-element-shim
@@ -13,7 +13,7 @@ the engine currently is [etpl](https://github.com/ecomfe/etpl)
 like shadowDOM, I've decided using AMD Loader to import component.  
 like this:
 ```javascript
-require('kComponent/component!somepath/something');
+require('k-component/component!somepath/something');
 // with this we don't need to do anything else
 ```
 ./somepath/something.component.html will be loaded as a html. You can register a component inside it.  
@@ -22,7 +22,7 @@ or like this
 ```
 require('component/somePath/AComponent');
 // you should have the code below in component/somePath/AComponent.js
-require('kCOmponent/component!./aComponent');
+require('k-component/component!./aComponent');
 ```
 
 Just call it `component.html`

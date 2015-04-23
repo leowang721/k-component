@@ -1,5 +1,5 @@
 /**
- * @file kComponent main entrance
+ * @file k-component main entrance
  *
  * @author Leo Wang(leowang721@gmail.com)
  */
@@ -7,7 +7,7 @@
 define(function (require) {
 
     /**
-     * kComponent main entrance
+     * k-component main entrance
      * @class component
      * @type {Object}
      */

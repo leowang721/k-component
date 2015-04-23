@@ -8,8 +8,8 @@
      function (require, exports, module) {
          'use strict';
 
-         var config = require('kComponent/config');
-         var registry = require('kComponent/registry');
+         var config = require('k-component/config');
+         var registry = require('k-component/registry');
 
          /**
           * @class component.loader
