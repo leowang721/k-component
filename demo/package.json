@@ -1,0 +1,31 @@
+{
+    "name": "demo",
+    "version": "0.0.1",
+    "description": "edp project",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "edp": {
+        "wwwroot": "/",
+        "depDir": "dep",
+        "srcDir": "src",
+        "loaderAutoConfig": "js,htm,html,tpl,vm,phtml",
+        "loaderUrl": "dep/esl/2.0.6/esl.js",
+        "dependencies": {
+            "custom-element-shim": "~0.0.1",
+            "eoo": "~0.1.2",
+            "etpl": "~3.0.0",
+            "fc-core": "~0.0.1-alpha.7",
+            "mini-event": "~1.0.2",
+            "promise": "~1.0.2",
+            "underscore": "~1.6.0",
+            "jquery": "~1.9.1"
+        }
+    },
+    "dependencies": {},
+    "author": "wangkemiao@baidu.com",
+    "repository": "empty",
+    "license": "BSD",
+    "readme": "README"
+}

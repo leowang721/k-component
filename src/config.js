@@ -15,12 +15,17 @@ define(function (require) {
         /**
          * @property {string} [LOADER_FILE_SUFFIX=component.html] file suffix for component.loader
          */
-         LOADER_FILE_SUFFIX: 'component.html',
+        LOADER_FILE_SUFFIX: 'component.html',
 
         /**
          * @property {string} [REGISTER_TAG=k-component] register tag name
          */
-        REGISTER_TAG: 'k-component'
+        REGISTER_TAG: 'k-component',
+
+        /**
+         * @property {string} [CACHED_ACTION_KEY=$$_COMPONENT_ACTION_$$] cached action key
+         */
+        CACHED_ACTION_KEY: '$$_COMPONENT_ACTION_$$'
     };
 
     return config;

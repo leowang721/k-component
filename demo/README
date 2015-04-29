@@ -1,0 +1,12 @@
+# 关于使用
+在 k-component 文件夹下直接使用 edp server 来启动 web 服务，直接内置支持 less。
+```shell
+edp webserver start
+```
+
+# 关于编译
+直接执行
+```node
+edp build -f -s release
+```
+然后访问 http://localhost:8848/demo/output/index.html

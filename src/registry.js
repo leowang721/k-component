@@ -6,12 +6,14 @@
 
 define(function (require) {
 
+    var $k = require('./$k');
+
     var _ = require('underscore');
+    var cache = require('./cache');
 
     // IE8 should do sth special to support, check demo/IE8.html
     require('custom-element-shim');
 
-    var browser = require('./browser');
     var config = require('./config');
     var etpl = require('etpl');
     var Promise = require('fc-core/Promise');
@@ -37,9 +39,6 @@ define(function (require) {
      * @this current dom element
      */
     registerTagPrototype.createdCallback = function () {
-        var template = this.querySelector('template');
-
-        // tagName
         var tagName = this.getAttribute('name');
         var template = this.querySelector('template');
         var actionPath = this.getAttribute('action');
@@ -49,6 +48,7 @@ define(function (require) {
             template: template,
             actionPath: actionPath,
             createdCallback: function () {
+                this.setAttribute('k-component', true);
             },
             attachedCallback: function () {
                 var me = this;
@@ -56,9 +56,13 @@ define(function (require) {
                 me.promise = new Promise(function (resolve, reject) {
                     if (me.actionPath) {
                         Promise.require([me.actionPath]).then(function (Action) {
-                            me.action = new Action({
+                            // $(me).action = new Action({
+                            //     el: me
+                            // });
+                            var action = new Action({
                                 el: me
                             });
+                            cache._data(me, config.CACHED_ACTION_KEY, action);
                             resolve();
                         }).catch(reject);
                     }
@@ -70,13 +74,13 @@ define(function (require) {
             detachedCallback: function () {
                 var me = this;
                 me.promise && me.promise.then(function () {
-                    me.action && me.action.dispose();
+                    $k(me) && $k(me).dispose();
                 });
             },
             attributeChangedCallback: function (attrName, oldVal, newVal) {
                 var me = this;
                 me.promise && me.promise.then(function () {
-                    me.action && me.action.attributeChangedCallback(attrName, oldVal, newVal);
+                    $k(me) && $k(me).attributeChangedCallback(attrName, oldVal, newVal);
                 });
             }
         });
@@ -84,7 +88,6 @@ define(function (require) {
 
     function processShadowRoot (me) {
         var template = me.template;
-        var actionPath = me.actionPath;
 
         if (me.componentInited) {
             return;
@@ -131,7 +134,7 @@ define(function (require) {
                 if (me.childNodes[i].nodeType === 1 && me.childNodes[i].tagName.toLowerCase() === 'fake-shadow-root') {
                     continue;
                 }
-                if (content.childNodes.length == 0) {
+                if (content.childNodes.length === 0) {
                     content.appendChild(me.childNodes[i]);
                 }
                 else {

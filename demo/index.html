@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="author" content="Leo Wang" />
+    <title>Todo List</title>
+    <script src="dep/esl/2.0.6/esl.js"></script>
+    <script>
+    require.config({
+        'baseUrl': 'src',
+        'paths': {
+            'css': 'common/esl/css'
+        },
+        'packages': [
+            {
+                'name': 'custom-element-shim',
+                'location': '../dep/custom-element-shim/0.0.1/src',
+                'main': 'document-register-element'
+            },
+            {
+                'name': 'eoo',
+                'location': '../dep/eoo/0.1.2/src',
+                'main': 'main'
+            },
+            {
+                'name': 'etpl',
+                'location': '../dep/etpl/3.0.0/src',
+                'main': 'main'
+            },
+            {
+                'name': 'fc-core',
+                'location': '../dep/fc-core/0.0.1-alpha.7/src',
+                'main': 'main'
+            },
+            {
+                'name': 'k-component',
+                'location': '../../src',
+                'main': 'main'
+            },
+            {
+                'name': 'mini-event',
+                'location': '../dep/mini-event/1.0.2/src',
+                'main': 'main'
+            },
+            {
+                'name': 'promise',
+                'location': '../dep/promise/1.0.2/src',
+                'main': 'main'
+            },
+            {
+                'name': 'underscore',
+                'location': '../dep/underscore/1.6.0/src',
+                'main': 'underscore'
+            }
+        ]
+    });
+    </script>
+</head>
+
+<body>
+<div id="main">
+    <todo-list id="main-todo-list">
+        <li finished="true">挖个坑</li>
+        <li>埋点土</li>
+        <li>数个一二三四五</li>
+    </todo-list>
+</div>
+<script src="src/dep.js"></script>
+<script>
+    require(['main']);
+</script>
+</body>
+</html>

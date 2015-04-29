@@ -15,30 +15,27 @@
     <script src="dep/custom-element-shim/dep/es5-shim/es5-sham.js"></script>
     <![endif]-->
 
-    <script src="http://s1.bdstatic.com/r/www/cache/ecom/esl/2-0-6/esl.js"></script>
+    <script src="dep/esl/2.0.6/esl.js"></script>
     <script>
     require.config({
         'baseUrl': 'src',
-        'paths': {},
+        'paths': {
+            'css': 'common/esl/css'
+        },
         'packages': [
             {
                 'name': 'component-shim',
-                'location': '../dep/component-shim/src',
+                'location': '../../src',
                 'main': 'main'
             },
             {
                 'name': 'custom-element-shim',
-                'location': '../dep/custom-element-shim/src',
+                'location': '../dep/custom-element-shim/0.0.1/src',
                 'main': 'document-register-element'
             },
             {
-                'name': 'jquery',
-                'location': '../dep/jquery/1.9.1/src',
-                'main': 'jquery.min'
-            },
-            {
                 'name': 'eoo',
-                'location': '../dep/eoo/0.1.1/src',
+                'location': '../dep/eoo/0.1.2/src',
                 'main': 'main'
             },
             {
@@ -65,6 +62,11 @@
                 'name': 'underscore',
                 'location': '../dep/underscore/1.6.0/src',
                 'main': 'underscore'
+            },
+            {
+                'name': 'k-component',
+                'location': '../../src',
+                'main': 'main'
             }
         ]
     });

@@ -1,0 +1,72 @@
+todo-list {
+    display: block;
+    position: relative;
+    li {
+        list-style: none;
+        padding: 8px 10px 8px 10px;
+        background-color: #ffffff;
+        border: 1px solid #cccccc;
+        margin: 10px 0;
+        cursor: pointer;
+        &:hover {
+            background: #dff0d8;
+        }
+        &[finished] {
+            background-color: #efefef;
+            color: #cdcdcd;
+            text-decoration: line-through;
+            &:hover {
+                color: #999999;
+            }
+        }
+    }
+
+    .shadow {
+        background-color: red;
+        h1 {
+            font-family: 'Architects Daughter', 'Helvetica Neue', Helvetica, Arial, serif;
+            font-size: 24px;
+        }
+        .add-form {
+            margin-bottom: 10px;
+            vertical-align: middle;
+        }
+        input[type=text] {
+            border: 1px solid #cccccc;
+            border-width: 0 0 1px 0;
+            box-sizing: border-box;
+            font-size: 13px;
+            padding: 3px 8px;
+            width: 200px;
+            height: 30px;
+            &:focus {
+                outline: none;
+            }
+        }
+        button {
+            border: 1px solid #cccccc;
+            box-sizing: border-box;
+            cursor: pointer;
+            font-size: 13px;
+            padding: 0 20px;
+            height: 30px;
+            background-color: #ffffff;
+            border-radius: 3px;
+            &:hover {
+                background-color: #efefef;
+            }
+        }
+        footer {
+            font-size: 12px;
+            color: #cccccc;
+        }
+    }
+
+    // 由于ff 等下直接连写会导致不识别，所以先分开写了
+    &::shadow {
+        .shadow();
+    }
+    fake-shadow-root {
+        .shadow();
+    }
+}
