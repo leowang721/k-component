@@ -4,7 +4,7 @@
     "dep/dom4.js": "4322b962106b627f7f18449b072e1108",
     "dep/dre-ie8-upfront-fix.js": "59a05192f8e1dd0942793bbfac7cb883",
     "dep/ie8.js": "221a58bd9e542bc2d862590af65f93b0",
-    "package.json": "b235543897e6a9205af0f4949b1f6dd4",
-    "src/document-register-element-ie8.js": "148752a08dd52bc6aaeb7a3b2c64d70d",
-    "src/document-register-element.js": "c552aa2610004b045843532192731080"
+    "package.json": "bd65a77209e8c8cb11d2d79236f7fed5",
+    "src/document-register-element-ie8.js": "2da505fc2e14670ce2de29119d67091a",
+    "src/document-register-element.js": "13ff3ada8269bc5dc6cc17550b0517b2"
 }

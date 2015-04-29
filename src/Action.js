@@ -10,7 +10,7 @@ define(function (require) {
     var EventTarget = require('fc-core/EventTarget');
     var oo = require('fc-core/oo');
     var Promise = require('fc-core/Promise');
-    var $k = require('./$k');
+    var $k = require('./k');
     var cache = require('./cache');
 
     /**

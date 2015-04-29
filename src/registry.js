@@ -6,7 +6,7 @@
 
 define(function (require) {
 
-    var $k = require('./$k');
+    var $k = require('./k');
 
     var _ = require('underscore');
     var cache = require('./cache');

@@ -1,12 +1,11 @@
 {
     "name": "custom-element-shim",
-    "version": "0.0.1",
-    "maintainers": [
-        {
-            "name": "Leo Wang",
-            "email": "leowang721@gmail.com"
-        }
-    ],
+    "version": "0.0.2",
+    "author": {
+      "name": "Leo Wang",
+      "email": "leowang721@gmail.com",
+      "url": "http://leowang721.github.io"
+    },
     "contributors": [],
     "dependencies": {},
     "main": "document-register-element",
