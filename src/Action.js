@@ -29,7 +29,6 @@ define(function (require) {
         constructor: function (opts) {
             var me = this;
             opts = opts || {};
-
             me.el = opts.el;
             me.content = opts.el.content;
             me.shadowRoot = opts.el.shadowRoot;
@@ -176,7 +175,10 @@ define(function (require) {
          *
          * @method dispose
          */
-        dispose: _.noop
+        dispose: function () {
+            this.data = null;
+            this.destroyEvents();
+        }
     };
 
     var Action = oo.derive(EventTarget, overrides);

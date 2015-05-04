@@ -28,6 +28,10 @@ define(function (require) {
 
     var isSupportShadowDOM = !!document.body.createShadowRoot;  // support shadow DOM?
 
+    var getK = function (el) {
+        return cache._data(el, config.CACHED_ACTION_KEY);
+    };
+
     /**
      * the customed element of component
      *
@@ -49,20 +53,20 @@ define(function (require) {
             actionPath: actionPath,
             createdCallback: function () {
                 this.setAttribute('k-component', true);
-            },
-            attachedCallback: function () {
                 var me = this;
-                processShadowRoot(me);
                 me.promise = new Promise(function (resolve, reject) {
                     if (me.actionPath) {
                         Promise.require([me.actionPath]).then(function (Action) {
-                            // $(me).action = new Action({
-                            //     el: me
-                            // });
+                            var ready = cache._data(me, config.CACHED_ACTION_KEY);
                             var action = new Action({
                                 el: me
                             });
                             cache._data(me, config.CACHED_ACTION_KEY, action);
+
+                            if (typeof ready === 'function') {
+                                ready(action);
+                            }
+
                             resolve();
                         }).catch(reject);
                     }
@@ -71,16 +75,20 @@ define(function (require) {
                     }
                 });
             },
+            attachedCallback: function () {
+                var me = this;
+                processShadowRoot(me);
+            },
             detachedCallback: function () {
                 var me = this;
                 me.promise && me.promise.then(function () {
-                    $k(me) && $k(me).dispose();
+                    getK(me) && getK(me).dispose();
                 });
             },
             attributeChangedCallback: function (attrName, oldVal, newVal) {
                 var me = this;
                 me.promise && me.promise.then(function () {
-                    $k(me) && $k(me).attributeChangedCallback(attrName, oldVal, newVal);
+                    getK(me) && getK(me).attributeChangedCallback(attrName, oldVal, newVal);
                 });
             }
         });
