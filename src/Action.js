@@ -5,13 +5,13 @@
  */
 
 define(function (require) {
-    var _ = require('underscore');
-    var util = require('fc-core/util');
-    var EventTarget = require('fc-core/EventTarget');
-    var oo = require('fc-core/oo');
-    var Promise = require('fc-core/Promise');
-    var $k = require('./k');
+    var _ = require('lodash');
+    var util = require('./lib/util');
+    var EventTarget = require('mini-event/EventTarget');
+    var eoo = require('eoo');
+    var Promise = require('promise');
     var cache = require('./cache');
+    var Model = require('emc/Model');
 
     /**
      * basic action process Class
@@ -29,24 +29,59 @@ define(function (require) {
         constructor: function (opts) {
             var me = this;
             opts = opts || {};
+
+            /**
+             * root element
+             * @member component.Action
+             * @type {HTMLElement}
+             */
             me.el = opts.el;
+
+            /**
+             * content element
+             * @member component.Action
+             * @type {HTMLElement}
+             */
             me.content = opts.el.content;
+
+            /**
+             * shadowRoot element
+             * @member component.Action
+             * @type {HTMLElement}
+             */
             me.shadowRoot = opts.el.shadowRoot;
 
-            me.data = cache.curry(me);
+            /**
+             * private data getter && setter, can also get data-* from #el
+             * @member component.Action
+             * @type {HTMLElement}
+             */
+            me.data = cache.curry(me.el);
 
             me.el.setAttribute('data-guid', util.guid());
 
             me.initialize();
 
-            try {
-                me.prepare().then(function () {
-                    me.bindEvents();
-                }).catch(me.processError);
-            }
-            catch (e) {
-                me.processError(e);
-            }
+            var html = me.content.innerHTML;
+
+            /**
+             * content render method
+             * @member component.Action
+             * @type {Function}
+             */
+            me.renderer = require('etpl').compile(html);
+            me.createModel();
+
+            /**
+             * promise of current Action
+             * @private
+             * @member component.Action
+             * @type {meta.Promise}
+             */
+            this.promise = new Promise(function (resolve, reject) {
+                me.bindEvents();
+                resolve();
+            });
         },
 
         /**
@@ -57,12 +92,46 @@ define(function (require) {
         initialize: _.noop,
 
         /**
-         * prepare the data especially like ajax request
+         * create model, this model is for rendering content
          *
-         * @return {meta.Promise} promise
+         * @return {meta.Model} #model
          */
-        prepare: function () {
-            return Promise.resolve();
+        createModel: function () {
+
+            /**
+             * model for rendering content
+             * @member component.Action
+             * @type {meta.Model}
+             */
+            this.model = new Model();
+            return this.model;
+        },
+
+        /**
+         * get #model for renderer to use
+         *
+         * @return {meta.Model} #model for renderer to use
+         */
+        getModel: function () {
+            return this.model.dump();
+        },
+
+        /**
+         * render content using #model
+         */
+        render: function () {
+            this.content.innerHTML = this.renderer(this.getModel());
+        },
+
+        /**
+         * execute after initialize and before bindEvents
+         *
+         * @method ready
+         *
+         * @param {Function} method method to execute
+         */
+        ready: function (method) {
+            this.promise.then(_.bind(method, this));
         },
 
         /**
@@ -108,6 +177,11 @@ define(function (require) {
             if (attributes && 'function' === typeof attributes[attrName] && oldVal !== newVal) {
                 attributes[attrName].call(this, oldVal, newVal);
             }
+            // if is data-*
+            if (/^data\-/.test(attrName) && oldVal !== newVal) {
+                var key = _.camelCase(attrName.replace(/^data\-/g, ''));
+                this.model.set(key, newVal);
+            }
         },
 
         /**
@@ -128,49 +202,6 @@ define(function (require) {
         },
 
         /**
-         * private variable for parent component
-         * @private
-         * @type {?component.Action}
-         */
-        _parent: null,
-
-        /**
-         * get parent component, if it is exsited
-         *
-         * @return {?component.Action} parent component's el
-         */
-        parent: function () {
-            if (this._parent) {
-                return this._parent;
-            }
-
-            var p = this.el.parentNode;
-            while (p && p !== document.body) {
-                if ($k(p)) {
-                    return $k(p);
-                }
-                p = p.parentNode;
-            }
-        },
-
-        /**
-         * get first level children component
-         *
-         * @return {Array.<component.Action>} first level children component
-         */
-        children: function () {
-            // return this.el.children('[k-component]');
-            var children = [];
-            _.each(this.el.children, function (item) {
-                if ($k(item)) {
-                    children.push($k(item));
-                }
-            });
-
-            return children;
-        },
-
-        /**
          * dispose process
          *
          * @method dispose
@@ -181,7 +212,7 @@ define(function (require) {
         }
     };
 
-    var Action = oo.derive(EventTarget, overrides);
+    var Action = eoo.create(EventTarget, overrides);
 
     return Action;
 });

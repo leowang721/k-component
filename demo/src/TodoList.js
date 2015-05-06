@@ -6,7 +6,7 @@
 
 define(function (require) {
 
-    var _ = require('underscore');
+    var _ = require('lodash');
     var $ = require('k-component/lib/zepto');
 
     require('k-component/component!./todo-list');
@@ -70,7 +70,7 @@ define(function (require) {
         }
     };
 
-    var TodoList = require('fc-core/oo').derive(require('k-component/Action'), overrides);
+    var TodoList = require('eoo').create(require('k-component/Action'), overrides);
 
     return TodoList;
 });

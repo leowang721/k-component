@@ -7,7 +7,7 @@
  */
 
 define(function (require) {
-    var _ = require('underscore');
+    var _ = require('lodash');
 
     var owners = [];
     var caches = [];
@@ -76,9 +76,10 @@ define(function (require) {
 
         curry: function (target) {
             return {
-                data: _.partial(cacheUtil.data, target),
-                hasData: _.partial(cacheUtil.hasData, target),
-                removeData: _.partial(cacheUtil.removeData, target)
+                get: _.partial(cacheUtil.data, target),
+                set: _.partial(cacheUtil.data, target),
+                remove: _.partial(cacheUtil.removeData, target),
+                hasData: _.partial(cacheUtil.hasData, target)
             };
         }
         // 不想搞$.Object.merge，先去掉
@@ -148,7 +149,7 @@ define(function (require) {
             }
             else if (!pvt && owner && owner.nodeType === 1) {
                 // 对于用HTML5 data-*属性保存的数据， 如<input id="test" data-full-name="Planet Earth"/>
-                // 我们可以通过$("#test").data("full-name")或$("#test").data("fullName")访问到
+                // 我们可以通过data("full-name")或data("fullName")访问到
                 return cacheUtil.parseData(owner, name, cache);
             }
         }

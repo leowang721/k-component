@@ -5,7 +5,6 @@
  */
 
 define(function (require) {
-    require('underscore');
-    require('fc-core');
+    require('lodash');
     require('k-component/component');
 });

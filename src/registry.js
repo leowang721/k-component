@@ -6,9 +6,7 @@
 
 define(function (require) {
 
-    var $k = require('./k');
-
-    var _ = require('underscore');
+    var _ = require('lodash');
     var cache = require('./cache');
 
     // IE8 should do sth special to support, check demo/IE8.html
@@ -16,7 +14,7 @@ define(function (require) {
 
     var config = require('./config');
     var etpl = require('etpl');
-    var Promise = require('fc-core/Promise');
+    var Promise = require('promise');
 
     // register component.config#REGISTER_TAG
     /**
@@ -56,18 +54,22 @@ define(function (require) {
                 var me = this;
                 me.promise = new Promise(function (resolve, reject) {
                     if (me.actionPath) {
-                        Promise.require([me.actionPath]).then(function (Action) {
-                            var ready = cache._data(me, config.CACHED_ACTION_KEY);
+                        Promise.require([me.actionPath]).then(function (Actions) {
+                            // var ready = cache._data(me, config.CACHED_ACTION_KEY);
+                            var Action = Actions[0];
                             var action = new Action({
                                 el: me
                             });
                             cache._data(me, config.CACHED_ACTION_KEY, action);
+                            action.ready(function () {
+                                resolve();
+                            });
 
-                            if (typeof ready === 'function') {
-                                ready(action);
-                            }
+                            // if (typeof ready === 'function') {
+                            //     ready(action);
+                            // }
 
-                            resolve();
+                            // resolve();
                         }).catch(reject);
                     }
                     else {
@@ -186,9 +188,10 @@ define(function (require) {
             var container;
             // in IE 9, FF, etc. we can not use document fragment to trigger attachedCallback, so...
             container = getRegisterContaienr();  // will trigger attchedCallback
-            var etplEngine = new etpl.Engine();
-            var renderer = etplEngine.compile(html);
-            container.innerHTML = renderer({});
+            // var etplEngine = new etpl.Engine();
+            // var renderer = etplEngine.compile(html);
+            // container.innerHTML = renderer({});
+            container.innerHTML = html;
         }
     };
 

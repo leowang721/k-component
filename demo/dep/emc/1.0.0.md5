@@ -1,0 +1,12 @@
+{
+    "LICENSE": "4ad5e4453289b3f084fbaf051a84e831",
+    "doc/conf.json": "9f562319fc9dd4f967e457247567cc91",
+    "README.md": "b90c44f9ec2fa3b465d12fd0b4575b78",
+    "package.json": "1bf1373bd5cb08864b40c98729beae3d",
+    "module.conf": "bbe353fe69279539bb457e8d3b54ee40",
+    "src/Collection.js": "7d9e8c9f375cb9a638e57427b91013d6",
+    "test/config.js": "d51378040c3a6afbd6aea861f045abfa",
+    "src/Model.js": "71eb5e3dda1c37cdd21a6ae1659428e2",
+    "test/spec/CollectionSpec.js": "737c172a3680e16138404e8a0bbb1b8e",
+    "test/spec/ModelSpec.js": "a14a5a71f4e285bf0af50abfe8cfad7d"
+}

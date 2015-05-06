@@ -1,6 +1,6 @@
 {
     "name": "k-component",
-    "version": "0.0.1-alpha.5",
+    "version": "0.0.1-alpha.6",
     "author": {
       "name": "Leo Wang",
       "email": "leowang721@gmail.com",
@@ -9,8 +9,11 @@
     "contributors": [],
     "dependencies": {
         "custom-element-shim": "~0.0.1",
+        "emc": "~1.0.0",
+        "eoo": "~0.1.2",
         "etpl": ">=3.0.0",
-        "fc-core": "~0.0.1-alpha.7"
+        "mini-event": "~1.0.2",
+        "promise": "~1.0.2"
     },
     "main": "main",
     "description": "A simple component shim, using custom element",
