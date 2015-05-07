@@ -54,9 +54,11 @@ define(function (require) {
                 var me = this;
                 me.promise = new Promise(function (resolve, reject) {
                     if (me.actionPath) {
-                        Promise.require([me.actionPath]).then(function (Actions) {
-                            // var ready = cache._data(me, config.CACHED_ACTION_KEY);
-                            var Action = Actions[0];
+                        Promise.require([me.actionPath]).then(function (Action) {
+                            // promise sometimes returns Array, but othertimes returns Function...
+                            if (_.isArray(Action)) {
+                                Action = Action[0];
+                            }
                             var action = new Action({
                                 el: me
                             });
@@ -64,12 +66,6 @@ define(function (require) {
                             action.ready(function () {
                                 resolve();
                             });
-
-                            // if (typeof ready === 'function') {
-                            //     ready(action);
-                            // }
-
-                            // resolve();
                         }).catch(reject);
                     }
                     else {

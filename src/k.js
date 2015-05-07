@@ -75,7 +75,9 @@ define(function (require) {
      * @param {boolean} [options.once=false] 控制事件仅执行一次
      */
     K.prototype.on = function (type, fn, thisObject, options) {
-        this.execute.apply(this, [].slice.call(arguments).unshift('on'));
+        var args = [].slice.call(arguments);
+        args.unshift('on');
+        this.execute.apply(this, args);
     };
 
     /**
@@ -84,7 +86,9 @@ define(function (require) {
      * @param {Function} fn 要执行的处理函数
      */
     K.prototype.ready = function (fn) {
-        this.execute.apply(this, [].slice.call(arguments).unshift('ready'));
+        var args = [].slice.call(arguments);
+        args.unshift('ready');
+        this.execute.apply(this, args);
     };
 
     var $k = function (el) {
