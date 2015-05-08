@@ -6,6 +6,7 @@
 
 define(function (require) {
     var _ = require('lodash');
+    var $k = require('./k');
     var util = require('./lib/util');
     var EventTarget = require('mini-event/EventTarget');
     var eoo = require('eoo');
@@ -18,6 +19,11 @@ define(function (require) {
      * @class component.Action
      */
     var overrides = {
+
+        $: function (query) {
+            return $k.$(query, this.el);
+        },
+
         /**
          * constructor
          *
@@ -36,6 +42,8 @@ define(function (require) {
              * @type {HTMLElement}
              */
             me.el = opts.el;
+
+            me.el['k-component'] = true;
 
             /**
              * content element
@@ -79,6 +87,7 @@ define(function (require) {
              * @type {meta.Promise}
              */
             this.promise = new Promise(function (resolve, reject) {
+                me.initBehavior();
                 me.bindEvents();
                 resolve();
             });
@@ -175,7 +184,7 @@ define(function (require) {
         attributeChangedCallback: function (attrName, oldVal, newVal) {
             var attributes = this.getAttributes();
             if (attributes && 'function' === typeof attributes[attrName] && oldVal !== newVal) {
-                attributes[attrName].call(this, oldVal, newVal);
+                attributes[attrName].call(this, newVal, oldVal);
             }
             // if is data-*
             if (/^data\-/.test(attrName) && oldVal !== newVal) {
@@ -185,11 +194,35 @@ define(function (require) {
         },
 
         /**
+         * process behavior
+         *
+         * @method initBehavior
+         */
+        initBehavior: _.noop,
+
+        /**
          * bind dom events
          *
          * @method bindEvents
          */
         bindEvents: _.noop,
+
+        /**
+         * get parent component
+         * @return {component.Action} parent component
+         */
+        getParent: function () {
+            var p = this.el;
+            while (p !== document.body) {
+                p = p.parentNode || p.host;
+                if (!p) {
+                    return;
+                }
+                if (p['k-component']) {
+                    return $k.get(p);
+                }
+            }
+        },
 
         /**
          * process error
@@ -199,6 +232,27 @@ define(function (require) {
          */
         processError: function (e) {
             util.processError(e);
+        },
+
+        /**
+         * getter
+         *
+         * @param {string} propName property name to get
+         *
+         * @return {*} value of the property
+         */
+        get: function (propName) {
+            return this[propName];
+        },
+
+        /**
+         * setter
+         *
+         * @param {string} propName property name to set
+         * @param {*} newVal value to set
+         */
+        set: function (propName, newVal) {
+            this[propName] = newVal;
         },
 
         /**

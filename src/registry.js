@@ -52,6 +52,7 @@ define(function (require) {
             createdCallback: function () {
                 this.setAttribute('k-component', true);
                 var me = this;
+                processShadowRoot(me);
                 me.promise = new Promise(function (resolve, reject) {
                     if (me.actionPath) {
                         Promise.require([me.actionPath]).then(function (Action) {
@@ -75,7 +76,7 @@ define(function (require) {
             },
             attachedCallback: function () {
                 var me = this;
-                processShadowRoot(me);
+                // processShadowRoot(me);
             },
             detachedCallback: function () {
                 var me = this;

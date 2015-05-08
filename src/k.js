@@ -18,20 +18,34 @@ define(function (require) {
         return cache._data(el, config.CACHED_ACTION_KEY);
     };
 
+    var $k = function (el) {
+        return new K(el);
+    };
+
+    $k.get = getK;
+
+    $k.$ = function (query, condition) {
+        if (typeof query === 'string') {
+            var result = $(query, condition);
+            if (isSupportShadowDOM) {
+                // merge shadow
+                result = $(_.toArray(result).concat(_.toArray($('::shadow ' + query, condition))));
+            }
+            return result;
+        }
+        return $(query, condition);
+    };
+
     function K(query) {
         var me = this;
 
         if (typeof query === 'string') {
-            me.target = $(query);
-
-            if (isSupportShadowDOM) {
-                // merge shadow
-                me.target = $(_.toArray(me.target).concat(_.toArray($('::shadow ' + query))));
-            }
+            me.target = $k.$(query);
         }
         else {
             me.target = $(query);
         }
+
         var promises = [];
         _.each(me.target, function (item) {
             if (!item.promise) {
@@ -89,10 +103,6 @@ define(function (require) {
         var args = [].slice.call(arguments);
         args.unshift('ready');
         this.execute.apply(this, args);
-    };
-
-    var $k = function (el) {
-        return new K(el);
     };
 
     // window.$k.noConflict = function () {
