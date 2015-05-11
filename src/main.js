@@ -12,7 +12,7 @@ define(function (require) {
      * @type {Object}
      */
     var component = {
-        version: '0.0.1-alpha.9'
+        version: '0.0.1-alpha.10'
     };
 
     return component;

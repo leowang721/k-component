@@ -13,6 +13,7 @@ define(function (require) {
     var Promise = require('promise');
     var cache = require('./cache');
     var Model = require('emc/Model');
+    var preservedAttributes = require('./preservedAttributes');
 
     /**
      * basic action process Class
@@ -182,6 +183,13 @@ define(function (require) {
          *
          */
         attributeChangedCallback: function (attrName, oldVal, newVal) {
+
+            // there is some default watching attributes that is preserved
+            if (preservedAttributes[attrName]) {
+                preservedAttributes[attrName].call(this, newVal, oldVal);
+                return;
+            }
+
             var attributes = this.getAttributes();
             if (attributes && 'function' === typeof attributes[attrName] && oldVal !== newVal) {
                 attributes[attrName].call(this, newVal, oldVal);
