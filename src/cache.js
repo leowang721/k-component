@@ -75,12 +75,55 @@ define(function (require) {
         },
 
         curry: function (target) {
-            return {
+            var toReturn = {
                 get: _.partial(cacheUtil.data, target),
-                set: _.partial(cacheUtil.data, target),
-                remove: _.partial(cacheUtil.removeData, target),
+                set: function (name, data) {
+                    var diffNew;
+                    if (name && typeof name === 'object') {
+                        // diff && fire
+                        diffNew = determineDiff(name, toReturn.get());
+                    }
+                    else if (typeof name === 'string' && data !== void 0) {
+                        diffNew = determineDiff(data, toReturn.get(name), name);
+                    }
+
+                    var diff;
+                    if (_.keys(diffNew).length > 0) {
+                        diff = {
+                            newValue: diffNew,
+                            oldValue: _.clone(toReturn.get())
+                        };
+                    }
+
+                    // set
+                    cacheUtil.data(target, name, data);
+
+                    if (diff) {
+                        toReturn.fire('change', diff);
+                        _.each(diff.newValue, function (item, key) {
+                            toReturn.fire('change:' + key, {
+                                newValue: item,
+                                oldValue: diff.oldValue[key]
+                            });
+                        });
+                    }
+                },
+                // remove: _.partial(cacheUtil.removeData, target),
+                remove: function (name) {
+                    var toRemove = toReturn.get(name);
+                    cacheUtil.removeData(target, name);
+                    if (toRemove !== undefined) {
+                        toReturn.fire('change:' + name, {
+                            newValue: undefined,
+                            oldValue: toRemove
+                        });
+                    }
+                },
                 hasData: _.partial(cacheUtil.hasData, target)
             };
+
+            require('mini-event/EventTarget').enable(toReturn);
+            return toReturn;
         }
         // 不想搞$.Object.merge，先去掉
         // mergeData: function(cur, src) {
@@ -137,12 +180,16 @@ define(function (require) {
         if (!pvt) {
             table = table.data;
         }
+
+        // 修改，处理事件
         if (name && typeof name === 'object') {
-            $.mix(table, name); // 写入一组属性
+            _.extend(table, name); // 写入一组属性
         }
         else if (getOne && data !== void 0) {
             table[name] = data;  // 写入单个属性
         }
+
+        // 以下为数据返回
         if (getOne) {
             if (name in table) {
                 return table[name];
@@ -190,6 +237,33 @@ define(function (require) {
             }
             return delOne; // 返回被移除的数据
         }
+    }
+
+    function determineDiff(newValue, oldValue, key) {
+        var diff = {};
+
+        if (key === undefined) {
+            if (typeof oldValue === 'object' && typeof newValue === 'object') {
+                _.each(newValue, function (item, eachKey) {
+                    var currentDiff = determineDiff(newValue[eachKey], oldValue[eachKey], eachKey);
+                    if (currentDiff !== undefined) {
+                        diff[eachKey] = currentDiff;
+                    }
+                });
+                return diff;
+            }
+
+            if (oldValue !== newValue) {
+                return newValue;
+            }
+            return;
+        }
+
+        var result = determineDiff(newValue, oldValue);
+        if (result !== undefined) {
+            diff[key] = result;
+        }
+        return diff;
     }
 
     return cacheUtil;

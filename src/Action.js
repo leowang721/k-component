@@ -8,90 +8,144 @@ define(function (require) {
     var _ = require('lodash');
     var $k = require('./k');
     var util = require('./lib/util');
-    var EventTarget = require('mini-event/EventTarget');
-    var eoo = require('eoo');
     var Promise = require('promise');
     var cache = require('./cache');
-    var Model = require('emc/Model');
     var preservedAttributes = require('./preservedAttributes');
 
     /**
      * basic action process Class
+     *
      * @class component.Action
+     * @constructor
+     *
+     * @param {Object?} opts options
      */
-    var overrides = {
-
-        $: function (query) {
-            return $k.$(query, this.el);
-        },
+    function Action(opts) {
+        var me = this;
+        opts = opts || {};
 
         /**
-         * constructor
-         *
-         * @constructor
-         *
-         * @param {Object?} opts options
-         *
+         * root element
+         * @member component.Action
+         * @type {HTMLElement}
          */
-        constructor: function (opts) {
-            var me = this;
-            opts = opts || {};
+        me.el = me.$(opts.el);
 
-            /**
-             * root element
-             * @member component.Action
-             * @type {HTMLElement}
-             */
-            me.el = opts.el;
+        me.el.attr('k-component', '');
+        me.el.attr('data-guid', util.guid());
 
-            me.el['k-component'] = true;
+        /**
+         * Add event handlers to the current host element
+         *
+         * ## usage
+         * - on(type, [selector], function(e){ ... })  ⇒ self
+         * - on(type, [selector], [data], function(e){ ... })  ⇒ self
+         * - on({ type: handler, type2: handler2, ... }, [selector])  ⇒ self
+         * - on({ type: handler, type2: handler2, ... }, [selector], [data])  ⇒ self
+         *
+         * @method on
+         */
+        me.on = me.el.on;
 
-            /**
-             * content element
-             * @member component.Action
-             * @type {HTMLElement}
-             */
-            me.content = opts.el.content;
+        /**
+         * Adds an event handler that removes itself the first time it runs, ensuring that the handler only fires once
+         *
+         * ## usage
+         * - one(type, [selector], function(e){ ... })  ⇒ self
+         * - one(type, [selector], [data], function(e){ ... })  ⇒ self v1.1+
+         * - one({ type: handler, type2: handler2, ... }, [selector])  ⇒ self
+         * - one({ type: handler, type2: handler2, ... }, [selector], [data])  ⇒ self
+         *
+         * @method one
+         */
+        me.one = me.el.one;
 
-            /**
-             * shadowRoot element
-             * @member component.Action
-             * @type {HTMLElement}
-             */
-            me.shadowRoot = opts.el.shadowRoot;
+        /**
+         * Detach event handlers added with on
+         *
+         * ## usage
+         * - off(type, [selector], function(e){ ... })  ⇒ self
+         * - off({ type: handler, type2: handler2, ... }, [selector])  ⇒ self
+         * - off(type, [selector])  ⇒ self
+         * - off()  ⇒ self
+         *
+         * @method off
+         */
+        me.off = me.el.off;
 
-            /**
-             * private data getter && setter, can also get data-* from #el
-             * @member component.Action
-             * @type {HTMLElement}
-             */
-            me.data = cache.curry(me.el);
+        /**
+         * Trigger the specified event on elements of the collection
+         *
+         * ##useage
+         * - trigger(event, [args])
+         *
+         * @method trigger
+         */
+        me.trigger = me.el.trigger;
 
-            me.el.setAttribute('data-guid', util.guid());
+        /**
+         * Like trigger, but triggers only event handlers on current elements and doesn’t bubble.
+         *
+         * ##useage
+         * - triggerHandler(event, [args])
+         *
+         * @method triggerHandler
+         */
+        me.triggerHandler = me.el.triggerHandler;
 
-            me.initialize();
+        /**
+         * content element
+         * @member component.Action
+         * @type {HTMLElement}
+         */
+        me.content = me.$(opts.el.content);
 
-            var html = me.content.innerHTML;
+        /**
+         * shadowRoot element
+         * @member component.Action
+         * @type {HTMLElement}
+         */
+        me.shadowRoot = me.$(opts.el.shadowRoot);
 
-            /**
-             * content render method
-             * @member component.Action
-             * @type {Function}
-             */
-            me.renderer = require('etpl').compile(html);
-            me.createModel();
+        /**
+         * private data getter && setter, can also get data-* from #el
+         * @member component.Action
+         * @type {HTMLElement}
+         */
+        me.data = cache.curry(me.el);
 
-            /**
-             * promise of current Action
-             * @private
-             * @member component.Action
-             * @type {meta.Promise}
-             */
-            this.promise = new Promise(function (resolve, reject) {
+        me.initialize();
+
+        var html = me.content.html();
+
+        /**
+         * content render method
+         * @member component.Action
+         * @type {Function}
+         */
+        me.renderer = require('etpl').compile(html);
+
+        /**
+         * promise of current Action
+         * @private
+         * @member component.Action
+         * @type {meta.Promise}
+         */
+        me.promise = new Promise(
+            function (resolve, reject) {
                 me.initBehavior();
                 me.bindEvents();
                 resolve();
-            });
+            }
+        );
+    }
+
+    Action.prototype = {
+
+        constructor: Action,
+
+        $: function (query) {
+            return $k(query, this.el);
         },
 
         /**
@@ -102,35 +156,32 @@ define(function (require) {
         initialize: _.noop,
 
         /**
-         * create model, this model is for rendering content
+         * get data for renderer to use
          *
-         * @return {meta.Model} #model
+         * @return {Object} data for renderer to use
          */
-        createModel: function () {
+        getRenderingData: function () {
+            var data = this.data;
+            var visit = function (propertyPath) {
+                var path = propertyPath.replace(/\[(\d+)\]/g, '.$1').split('.');
+                var propertyName = path.shift();
+                var value = data.get(propertyName);
 
-            /**
-             * model for rendering content
-             * @member component.Action
-             * @type {meta.Model}
-             */
-            this.model = new Model();
-            return this.model;
-        },
+                while (value && (propertyName = path.shift())) {
+                    value = value[propertyName];
+                }
 
-        /**
-         * get #model for renderer to use
-         *
-         * @return {meta.Model} #model for renderer to use
-         */
-        getModel: function () {
-            return this.model.dump();
+                return value;
+            };
+
+            return {get: visit, relatedModel: data};
         },
 
         /**
          * render content using #model
          */
         render: function () {
-            this.content.innerHTML = this.renderer(this.getModel());
+            this.content.html(this.renderer(this.getRenderingData()));
         },
 
         /**
@@ -184,6 +235,10 @@ define(function (require) {
          */
         attributeChangedCallback: function (attrName, oldVal, newVal) {
 
+            if (this.get('disposed')) {
+                return;
+            }
+
             // there is some default watching attributes that is preserved
             if (preservedAttributes[attrName]) {
                 preservedAttributes[attrName].call(this, newVal, oldVal);
@@ -197,7 +252,7 @@ define(function (require) {
             // if is data-*
             if (/^data\-/.test(attrName) && oldVal !== newVal) {
                 var key = _.camelCase(attrName.replace(/^data\-/g, ''));
-                this.model.set(key, newVal);
+                this.data.set(key, newVal);
             }
         },
 
@@ -243,7 +298,7 @@ define(function (require) {
         },
 
         /**
-         * getter
+         * prop getter
          *
          * @param {string} propName property name to get
          *
@@ -254,7 +309,7 @@ define(function (require) {
         },
 
         /**
-         * setter
+         * prop setter
          *
          * @param {string} propName property name to set
          * @param {*} newVal value to set
@@ -270,11 +325,11 @@ define(function (require) {
          */
         dispose: function () {
             this.data = null;
-            this.destroyEvents();
+            this.set('disposed', true);
         }
     };
 
-    var Action = eoo.create(EventTarget, overrides);
+    // console.log(Action.prototype.constructor)
 
     return Action;
 });
