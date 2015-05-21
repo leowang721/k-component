@@ -88,3 +88,57 @@ require('k-component/component!./a-component');
     </div>
 </hello-world>
 ```
+
+## 关于 Action
+
+Action 使用 cache 私有存储，不直接暴露Action 实例的直接获取方法
+
+在 Action 中
+```javascript
+this.el;  // 实例依托的元素，就是自定义元素，Zepto 对象
+this.content;  // innerHTML 依托的元素，如果支持 shadowDOM，就是 el，否则是 content 元素，Zepto 对象
+this.shadowRoot;  // shadowDOM 所在，如果不支持，则是 fake-shadow-root，Zepto 对象
+
+// 直接可使用 Zepto 自定义事件，挂载于 this.el 上
+// this.on
+// this.one
+// this.off
+// this.trigger
+// this.triggerHandler
+
+```
+
+## 关于 el、content和 shadowRoot
+上面实例 hello-world 的进一步展现HTML解析
+```html
+<hello-world id='a'>
+    <shadow>  <!-- 如果不支持，就是 fake-shadow-root -->
+        <h1>Hello World!</h1>
+        <div>
+            This is <content>Leo Wang</content> saying HELLO.
+        </div>
+    </shadow>
+</hello-world>
+```
+el 是自定义的元素，在上面的实例中，就是：hello-world
+shadowRoot 包含了实际展现出来的全部结构，其实就是 shadow 的部分，如果不支持 shadowDOM，则为 fake-shadow-root
+content 是指 shadowRoot 中的 content 部分，实际上期望它的内容就是#a元素的 innerHTML，这样起到隐藏展现 HTML 内容的目的，能够获取到的就是实际内容 HTML。
+
+content 暂不支持多个模式。
+
+## 关于$k
+
+$k 是随意起的名字，主旨是为了能够获取到按需加载的元素&Action来进行操作和处理。  
+当前的$k 实际上是 Zepto 对象的扩展，其内容为对应元素，默认支持穿透`shadowDom`的获取。  
+当前增加或重定义的属性及方法：
+- promise 元素&Action是否ready的 promise
+- then
+- catch
+- data 重写了data 方法，如果是 component 元素，则使用其 Action 的 cache 存储，否则使用 zepto 的默认处理（HTML5的 data-* 存储）
+```javascript
+var a = $k(query|element);  // 参数可以是查询字符串或者元素
+a.then(method);  // 当元素&Action ready 后，做一些事情，method 的 this 指向对应的 Action
+a.ready(method);  // 当元素 ready 后，做一些事情，这是 Zepto 默认有的方法，请注意
+a.data('k', true);  // 设置数据
+a.data('k');  // 获取数据
+```
