@@ -81,12 +81,20 @@ require('k-component/component!./a-component');
 
 展现的效果 HTML 类似于：
 ```html
-<hello-world>
+<hello-world id="hello">
     <h1>Hello World!</h1>
     <div>
         This is <content>Leo Wang</content> saying HELLO.
     </div>
 </hello-world>
+```
+
+实际使用，例如设置谁来说 HELLO，来动态的达到上面的效果。
+```javascript
+document.getElementById('hello').innerHTML = 'Leo Wang';
+// 前提是能直接获取到，如果在某个 shadow root中，这样是不能直接拿到的
+$k('#hello').html('Leo Wang');
+// 或者要先拿到 shadowRoot，然后再获取元素，比较麻烦，不述。
 ```
 
 ## 关于 Action
