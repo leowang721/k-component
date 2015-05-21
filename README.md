@@ -111,7 +111,7 @@ this.shadowRoot;  // shadowDOM 所在，如果不支持，则是 fake-shadow-roo
 ## 关于 el、content和 shadowRoot
 上面实例 hello-world 的进一步展现HTML解析
 ```html
-<hello-world id='a'>
+<hello-world id="hello">
     <shadow>  <!-- 如果不支持，就是fake-shadow-root -->
         <h1>Hello World!</h1>
         <div>
@@ -121,8 +121,10 @@ this.shadowRoot;  // shadowDOM 所在，如果不支持，则是 fake-shadow-roo
 </hello-world>
 ```
 - el是自定义的元素，在上面的实例中，就是：hello-world
-shadowRoot 包含了实际展现出来的全部结构，其实就是 shadow 的部分，如果不支持 shadowDOM，则为 fake-shadow-root。当然shadow实际上是不存在的，它是个document fragment，不过fake-shadow-root存在
-content 是指 shadowRoot 中的 content 部分，实际上期望它的内容就是#a元素的 innerHTML，这样起到隐藏展现 HTML 内容的目的，能够获取到的就是实际内容 HTML。
+- shadowRoot 包含了实际展现出来的全部结构，就是shadow，如果不支持 shadowDOM，则为 fake-shadow-root。  
+当然shadow实际上是不存在的，它是个document fragment，不过fake-shadow-root存在
+- content 是指 shadowRoot 中的 content 部分  
+实际上它的内容就是#hello元素的innerHTML，这样起到隐藏展现 HTML 内容的目的，能够获取到的就是实际内容 HTML。
 
 content 暂不支持多个模式。
 
