@@ -23,7 +23,7 @@ shadowDOM当前仅Chrome支持...
 - 其他浏览器处理了 dom 结构，类似于 chrome 下的效果
 
 这带来一个问题，样式！  
-所以现有的样式支持要这样：  
+所以现有的样式如果涉及到 shadow 的部分，要同时处理 fake-shadow-root，例如：
 ```less
 .some-style {
     // ....
@@ -39,7 +39,7 @@ some-element-tag {
 
 ## 关于模板引擎
 [etpl](https://github.com/ecomfe/etpl)  
-当前仅支持 content 内可以使用模板，结合 Action 的 Model 来进行渲染
+当前仅支持 content 内可以使用模板，结合 Action 的 data 来进行渲染
 
 ## 关于引入
 如前述，决定使用 AMD 模式开发，所以提供了相应的加载器：
@@ -112,7 +112,7 @@ this.shadowRoot;  // shadowDOM 所在，如果不支持，则是 fake-shadow-roo
 上面实例 hello-world 的进一步展现HTML解析
 ```html
 <hello-world id='a'>
-    <shadow>  <!-- 如果不支持，就是 fake-shadow-root -->
+    <shadow>  <!-- 如果不支持，就是fake-shadow-root，当然shadow实际上是不存在的，它是个document fragment，不过fake-shadow-root存在 -->
         <h1>Hello World!</h1>
         <div>
             This is <content>Leo Wang</content> saying HELLO.
