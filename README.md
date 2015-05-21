@@ -93,8 +93,9 @@ require('k-component/component!./a-component');
 ```javascript
 document.getElementById('hello').innerHTML = 'Leo Wang';
 // 前提是能直接获取到，如果在某个 shadow root中，这样是不能直接拿到的
+// 可以直接使用$k 穿透 shadow 来获取
 $k('#hello').html('Leo Wang');
-// 或者要先拿到 shadowRoot，然后再获取元素，比较麻烦，不述。
+// 或者先拿到 所在shadowRoot元素，然后再获取元素，比较麻烦，不述。
 ```
 
 ## 关于 Action
