@@ -235,10 +235,6 @@ define(function (require) {
          */
         attributeChangedCallback: function (attrName, oldVal, newVal) {
 
-            if (this.get('disposed')) {
-                return;
-            }
-
             // there is some default watching attributes that is preserved
             if (preservedAttributes[attrName]) {
                 preservedAttributes[attrName].call(this, newVal, oldVal);
@@ -324,7 +320,6 @@ define(function (require) {
          * @method dispose
          */
         dispose: function () {
-            this.data = null;
             this.set('disposed', true);
         }
     };

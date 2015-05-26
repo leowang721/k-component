@@ -30,7 +30,9 @@ shadowDOM当前仅Chrome支持...
 }
 
 some-element-tag {
-    &::shadow,
+    &::shadow {
+        .some-style;
+    }
     fake-shadow-root {
         .some-style;
     }

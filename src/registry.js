@@ -50,9 +50,9 @@ define(function (require) {
             template: template,
             actionPath: actionPath,
             createdCallback: function () {
-                this.setAttribute('k-component', true);
                 var me = this;
-                processShadowRoot(me);
+                this.setAttribute('k-component', true);
+                processShadowRoot(this);
                 me.promise = new Promise(function (resolve, reject) {
                     if (me.actionPath) {
                         Promise.require([me.actionPath]).then(function (Action) {
@@ -75,14 +75,8 @@ define(function (require) {
                 });
             },
             attachedCallback: function () {
-                var me = this;
-                // processShadowRoot(me);
             },
             detachedCallback: function () {
-                var me = this;
-                me.promise && me.promise.then(function () {
-                    getK(me) && getK(me).dispose();
-                });
             },
             attributeChangedCallback: function (attrName, oldVal, newVal) {
                 var me = this;
@@ -136,7 +130,6 @@ define(function (require) {
                 fakeShadowRoot.appendChild(content);
             }
             me.content = content;
-
             for (var i = me.childNodes.length - 1; i >= 0; i--) {
                 if (me.childNodes[i].nodeType === 1 && me.childNodes[i].tagName.toLowerCase() === 'fake-shadow-root') {
                     continue;
