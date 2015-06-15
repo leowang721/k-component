@@ -136,5 +136,25 @@ define(function (require) {
         }
     };
 
+    /**
+     * 转驼峰写法
+     * @param  {string} str 待转换的字符串
+     * @return {string} 转后的结果
+     */
+    util.toCamelCase =  function (str) {
+        if (str == null) {
+            return str;
+        }
+        // 移除前后的空格
+        str = str.replace(/(^\s*)|(\s*$)/g, '');
+        // 处理以-开头的情况
+        str = str.charAt(0) === '-' ? str.substring(1) : str;
+        // 开始转换
+        str = str.replace(/-(\w)/g, function ($0, $1) {
+            return $1.toUpperCase();
+        });
+        return str;
+    };
+
     return util;
 });
