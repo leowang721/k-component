@@ -269,7 +269,10 @@ define(function (require) {
          * @method dispose
          */
         dispose: function () {
+            var body = document.getElementsByTagName('body')[0];
             this.data = null;
+            this.content = '';
+            body.remove(this.el);
             this.destroyEvents();
         }
     };

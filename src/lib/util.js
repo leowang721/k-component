@@ -137,23 +137,34 @@ define(function (require) {
     };
 
     /**
-     * 转驼峰写法
-     * @param  {string} str 待转换的字符串
-     * @return {string} 转后的结果
+     * 是否支持CSS3特定属性
+     * @param {string} property 待检测的属性
+     * @return {boolean}
      */
-    util.toCamelCase =  function (str) {
-        if (str == null) {
-            return str;
+    util.isSupportCSS3 = function (property) {
+        // 目前兼容这些就可以了吧
+        var properties = [property, '-webkit-' + property, '-ms-' + property, '-moz-' + property, '-o-' + property];
+        var style = document.createElement('body').style;
+        for (var i = 0, l = properties.length; i < l; i++) {
+            if (style.hasOwnProperty(properties[i])) {
+                return true;
+            }
         }
-        // 移除前后的空格
-        str = str.replace(/(^\s*)|(\s*$)/g, '');
-        // 处理以-开头的情况
-        str = str.charAt(0) === '-' ? str.substring(1) : str;
-        // 开始转换
-        str = str.replace(/-(\w)/g, function ($0, $1) {
-            return $1.toUpperCase();
-        });
-        return str;
+        return false;
+    };
+
+    /**
+     * 获取鼠标滚动时的值
+     * @param  {Event} event 鼠标滚动时事件对象
+     * @return {number} 1:向上   -1:向下
+     */
+    util.getMouseScrollVal = function (event) {
+        event = event || window.event;
+        var val = event.originalEvent.wheelDelta
+            ? (event.originalEvent.wheelDelta > 0 ? 1 : -1)
+            : (-event.originalEvent.detail > 0 ? 1 : -1);
+
+        return val;
     };
 
     return util;
